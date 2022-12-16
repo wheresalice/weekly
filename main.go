@@ -1,28 +1,61 @@
-/*
-Copyright © 2021 Wheresalice
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
 package main
 
-import "github.com/wheresalice/go_boilerplate/cmd"
+import (
+	"fmt"
+	"github.com/gosimple/slug"
+	"github.com/kirsle/configdir"
+	"github.com/mmcdole/gofeed"
+	"log"
+	"os"
+	"path/filepath"
+)
+
+func lastUpdated(u string) string {
+	configPath := configdir.LocalConfig("pinboard2markdown")
+	file, err := os.ReadFile(filepath.Join(configPath, slug.Make(u)))
+	if os.IsNotExist(err) {
+		return "0"
+	} else {
+		return string(file)
+	}
+}
+
+func setLastUpdated(u string, d string) {
+	configPath := configdir.LocalConfig("pinboard2markdown")
+	err := configdir.MakePath(configPath) // Ensure it exists.
+	if err != nil {
+		panic(err)
+	}
+	err = os.WriteFile(filepath.Join(configPath, slug.Make(u)), []byte(d), 0600)
+	if err != nil {
+		log.Fatalf("Failed writing last updated data: %s", err)
+	}
+}
 
 func main() {
-	cmd.Execute()
+	if len(os.Args) != 2 {
+		fmt.Printf("Usage: pinboard2markdown <feed url>")
+		return
+	}
+	feedUrl := os.Args[1]
+	log.Printf("loading data from %s\n", feedUrl)
+	//	https://feeds.pinboard.in/rss/u:wheresalice/
+
+	fp := gofeed.NewParser()
+	feed, _ := fp.ParseURL(feedUrl)
+
+	latest := lastUpdated(feedUrl)
+	newLatest := lastUpdated(feedUrl)
+	for _, item := range feed.Items {
+		if item.Published > latest {
+			fmt.Printf("## [%s](%s)\n", item.Title, item.Link)
+			fmt.Println()
+			fmt.Printf("> %s\n", item.Description)
+
+			if item.Published > newLatest {
+				newLatest = item.Published
+			}
+		}
+	}
+	setLastUpdated(feedUrl, newLatest)
 }
