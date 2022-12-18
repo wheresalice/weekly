@@ -7,10 +7,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "friday"
-    reviewers:
-      - "wheresalice"
-    assignees:
-      - "wheresalice"
     labels:
       - "chore"
     open-pull-requests-limit: 10
@@ -22,10 +18,6 @@ updates:
     schedule:
       interval: "weekly"
       day: "friday"
-    reviewers:
-      - "wheresalice"
-    assignees:
-      - "wheresalice"
     labels:
       - "chore"
     open-pull-requests-limit: 10
