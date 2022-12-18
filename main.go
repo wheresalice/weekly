@@ -49,8 +49,10 @@ func main() {
 	for _, item := range feed.Items {
 		if item.Published > latest {
 			fmt.Printf("## [%s](%s)\n", item.Title, item.Link)
+			if item.Description != "" {
+				fmt.Printf("> %s\n", item.Description)
+			}
 			fmt.Println()
-			fmt.Printf("> %s\n", item.Description)
 
 			if item.Published > newLatest {
 				newLatest = item.Published
