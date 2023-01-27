@@ -167,14 +167,14 @@ func GitHubStars() {
 	latest := getLatestStar(os.Args[2])
 	setLatestStar(os.Args[2], stars[0].ID)
 
-	fmt.Println("# Interesting GitHub Repos")
+	fmt.Println("## Interesting GitHub Repos")
 	fmt.Println()
 
 	for i := range stars {
 		if string(rune(stars[i].ID)) == latest {
 			return
 		}
-		fmt.Printf("## [%s](%s)\n", stars[i].Name, stars[i].HTMLURL)
+		fmt.Printf("### [%s](%s)\n", stars[i].Name, stars[i].HTMLURL)
 		if stars[i].Description != "" {
 			fmt.Printf("> %s\n", stars[i].Description)
 		}
