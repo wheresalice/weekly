@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/urfave/cli/v2"
-	"github.com/wheresalice/pinboard2markdown/cmd"
+	"github.com/wheresalice/weekly/cmd"
 	"log"
 	"os"
 )

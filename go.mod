@@ -1,4 +1,4 @@
-module github.com/wheresalice/pinboard2markdown
+module github.com/wheresalice/weekly
 
 go 1.19
 
