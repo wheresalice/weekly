@@ -46,6 +46,10 @@ func Pinboard() {
 
 	latest := lastUpdated(feedUrl)
 	newLatest := lastUpdated(feedUrl)
+
+	fmt.Println("# Interesting Links")
+	fmt.Println()
+
 	for _, item := range feed.Items {
 		if item.Published > latest {
 			fmt.Printf("## [%s](%s)\n", item.Title, item.Link)
