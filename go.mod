@@ -6,7 +6,7 @@ require (
 	github.com/gosimple/slug v1.13.1
 	github.com/kirsle/configdir v0.0.0-20170128060238-e45d2f54772f
 	github.com/mmcdole/gofeed v1.2.0
-	github.com/urfave/cli/v2 v2.24.3
+	github.com/urfave/cli/v2 v2.24.4
 )
 
 require (
