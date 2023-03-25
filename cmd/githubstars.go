@@ -3,8 +3,8 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/adrg/xdg"
 	"github.com/gosimple/slug"
-	"github.com/kirsle/configdir"
 	"io"
 	"log"
 	"net/http"
@@ -121,8 +121,8 @@ type GitHubStarsStruct []struct {
 }
 
 func getLatestStar(u string) string {
-	configPath := configdir.LocalConfig("githubstars")
-	file, err := os.ReadFile(filepath.Join(configPath, slug.Make(u)))
+	statePath := filepath.Join(xdg.StateHome, "githubstars")
+	file, err := os.ReadFile(filepath.Join(statePath, slug.Make(u)))
 	if os.IsNotExist(err) {
 		return "0"
 	} else {
@@ -131,12 +131,12 @@ func getLatestStar(u string) string {
 }
 
 func setLatestStar(u string, i int) {
-	configPath := configdir.LocalConfig("githubstars")
-	err := configdir.MakePath(configPath) // Ensure it exists.
+	statePath := filepath.Join(xdg.StateHome, "githubstars")
+	err := os.MkdirAll(statePath, 0700)
 	if err != nil {
 		panic(err)
 	}
-	err = os.WriteFile(filepath.Join(configPath, slug.Make(u)), []byte(string(rune(i))), 0600)
+	err = os.WriteFile(filepath.Join(statePath, slug.Make(u)), []byte(string(rune(i))), 0600)
 	if err != nil {
 		log.Fatalf("Failed writing latest star: %s", err)
 	}

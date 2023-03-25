@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/adrg/xdg"
 	"github.com/gosimple/slug"
-	"github.com/kirsle/configdir"
 	"github.com/mmcdole/gofeed"
 	"log"
 	"os"
@@ -11,8 +11,8 @@ import (
 )
 
 func lastUpdated(u string) string {
-	configPath := configdir.LocalConfig("pinboard2markdown")
-	file, err := os.ReadFile(filepath.Join(configPath, slug.Make(u)))
+	statePath := filepath.Join(xdg.StateHome, "pinboard2markdown")
+	file, err := os.ReadFile(filepath.Join(statePath, slug.Make(u)))
 	if os.IsNotExist(err) {
 		return "0"
 	} else {
@@ -21,12 +21,12 @@ func lastUpdated(u string) string {
 }
 
 func setLastUpdated(u string, d string) {
-	configPath := configdir.LocalConfig("pinboard2markdown")
-	err := configdir.MakePath(configPath) // Ensure it exists.
+	statePath := filepath.Join(xdg.StateHome, "pinboard2markdown")
+	err := os.MkdirAll(statePath, 0700) // Ensure it exists.
 	if err != nil {
 		panic(err)
 	}
-	err = os.WriteFile(filepath.Join(configPath, slug.Make(u)), []byte(d), 0600)
+	err = os.WriteFile(filepath.Join(statePath, slug.Make(u)), []byte(d), 0600)
 	if err != nil {
 		log.Fatalf("Failed writing last updated data: %s", err)
 	}
