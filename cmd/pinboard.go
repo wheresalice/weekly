@@ -42,7 +42,10 @@ func Pinboard() {
 	//	https://feeds.pinboard.in/rss/u:wheresalice/
 
 	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(feedUrl)
+	feed, err := fp.ParseURL(feedUrl)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	latest := lastUpdated(feedUrl)
 	newLatest := lastUpdated(feedUrl)
