@@ -6,7 +6,7 @@ require (
 	github.com/adrg/xdg v0.4.0
 	github.com/gosimple/slug v1.13.1
 	github.com/mmcdole/gofeed v1.2.1
-	github.com/urfave/cli/v2 v2.25.5
+	github.com/urfave/cli/v2 v2.25.6
 )
 
 require (
